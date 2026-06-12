@@ -42,10 +42,21 @@ no numbered sections, no intro before the first block, only show categories with
 Skills are modular instructions in .claude/commands/ that adjust behavior for specific tasks.
 When the user invokes a skill, adapt to the context it defines.
 
-## Vault and notes
+## Knowledge base
+All user knowledge lives in notes/. When asked about any topic, look for relevant
+files in notes/ before answering. If a note exists, base your answer on it.
+Do not answer from memory if there is a file that covers the topic.
+
+Structure:
+- notes/materias/   — studies, courses, subjects
+- notes/trabajo/    — work and professional projects
+- notes/proyectos/  — personal projects
+- notes/ideas/      — brainstorming and loose thoughts
+- notes/recursos/   — books, links, reference material
+
 When the user says "save this", "create a note", "write this down", or similar:
-1. Create a .md file in notes/ with the relevant information
-2. Update related notes with cross-links where appropriate
+1. Create a .md file in the correct notes/ subfolder
+2. Use a clear filename: topic-subtopic.md
 Never save to memory when the user says "save" — that goes to notes/.
 Memory is only updated when explicitly requested.
 
