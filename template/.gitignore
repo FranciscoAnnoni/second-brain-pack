@@ -1,0 +1,21 @@
+# Local config (contains machine-specific paths)
+config/agent.yaml
+
+# Secrets and credentials
+.env
+*.key
+*.pem
+
+# Logs and runtime files
+*.log
+.session-notes.md
+
+# OS and editor artifacts
+.DS_Store
+Thumbs.db
+.obsidian/workspace.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
