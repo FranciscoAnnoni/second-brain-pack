@@ -65,13 +65,29 @@ def find_latest_daily(vault_root):
 def build_prompt(config, pendientes, daily_date, daily_content):
     today = datetime.now().strftime("%Y-%m-%d")
     lang = config.get("language", "es")
+    agent = config.get("agent", "gemini")
+    agent_name = config.get("agent_name", "Aria")
+    user_name = config.get("user_name", "")
+
+    identity_prefix = ""
+    if agent != "claude":
+        if lang == "en":
+            identity_prefix = (
+                f"You are {agent_name}, the personal AI assistant of {user_name}. "
+                "Be direct, concrete, no filler. No emojis.\n\n"
+            )
+        else:
+            identity_prefix = (
+                f"Sos {agent_name}, el asistente personal de {user_name}. "
+                "Se directo, concreto, sin relleno. Sin emojis.\n\n"
+            )
 
     if lang == "en":
         instructions = _build_prompt_en(pendientes, daily_date, daily_content, today)
     else:
         instructions = _build_prompt_es(pendientes, daily_date, daily_content, today)
 
-    return instructions
+    return identity_prefix + instructions
 
 
 def _build_prompt_es(pendientes, daily_date, daily_content, today):
@@ -169,15 +185,15 @@ def call_agent(config, prompt):
             sys.exit(
                 "Error: agent is 'other' but agent_command is empty in config/agent.yaml"
             )
-        parts = agent_cmd.split()
-        binary, flag = parts[0], "-p"
+        binary, flag = agent_cmd.split()[0], None
     else:
         sys.exit(
             f"Error: unknown agent '{agent}'. Valid values: claude, gemini, other."
         )
 
+    cmd = [binary, flag, "-"] if flag else [binary]
     try:
-        result = subprocess.run([binary, flag, prompt], text=True)
+        result = subprocess.run(cmd, input=prompt, text=True)
         sys.exit(result.returncode)
     except FileNotFoundError:
         sys.exit(

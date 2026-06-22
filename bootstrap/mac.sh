@@ -45,50 +45,28 @@ fi
 echo "  Repo: $REPO_ROOT"
 echo ""
 
-# ── 1. Verificar Python 3.8+ ──────────────────────────────────────────────
-PYTHON=""
-for py in python3 python; do
-    if command -v "$py" &>/dev/null; then
-        ok=$("$py" -c "import sys; print(sys.version_info >= (3, 8))" 2>/dev/null)
-        if [[ "$ok" == "True" ]]; then
-            PYTHON="$py"
-            break
-        fi
-    fi
-done
+# ── 1. Instalar uv si no está disponible ─────────────────────────────────
+if ! command -v uv &>/dev/null; then
+    echo "  Instalando uv..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+fi
 
-if [[ -z "$PYTHON" ]]; then
-    echo -e "${RED}✗${RESET} Python 3.8+ no encontrado."
-    echo ""
-    echo "  Opciones:"
-    echo "  · Homebrew:    brew install python"
-    echo "  · Python.org:  https://www.python.org/downloads/"
-    echo ""
-    echo "  Despues de instalar, volvé a correr este script."
+# Hacer uv disponible en la sesión actual
+source "$HOME/.local/bin/env" 2>/dev/null || export PATH="$HOME/.local/bin:$PATH"
+
+if ! command -v uv &>/dev/null; then
+    echo -e "${RED}✗${RESET} uv no pudo instalarse. Revisá tu conexión e intentá de nuevo."
     exit 1
 fi
 
-echo -e "${GREEN}✓${RESET} Python: $($PYTHON --version)"
+echo -e "${GREEN}✓${RESET} uv: $(uv --version)"
 
-# ── 2. Verificar tkinter ──────────────────────────────────────────────────
-if ! "$PYTHON" -c "import tkinter" 2>/dev/null; then
-    echo -e "${YELLOW}!${RESET} tkinter no disponible en este Python."
-    echo ""
-    echo "  Soluciones:"
-    echo "  · brew install python-tk"
-    echo "  · O instala Python desde https://www.python.org/downloads/"
-    echo "    (incluye tkinter por defecto)"
-    exit 1
-fi
-
-echo -e "${GREEN}✓${RESET} tkinter OK"
-
-# ── 3. Instalar customtkinter ─────────────────────────────────────────────
-echo "  Instalando customtkinter..."
-"$PYTHON" -m pip install customtkinter --quiet --disable-pip-version-check
-echo -e "${GREEN}✓${RESET} customtkinter OK"
+# ── 2. Instalar Python 3.12 via uv ───────────────────────────────────────
+echo "  Verificando Python 3.12..."
+uv python install 3.12 --quiet
+echo -e "${GREEN}✓${RESET} Python 3.12 OK"
 echo ""
 
-# ── 4. Lanzar instalador GUI ──────────────────────────────────────────────
+# ── 3. Lanzar instalador GUI ──────────────────────────────────────────────
 echo "  Abriendo instalador..."
-"$PYTHON" "$REPO_ROOT/install.py"
+uv run --with customtkinter "$REPO_ROOT/install.py"

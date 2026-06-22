@@ -44,43 +44,36 @@ Everything the user knows goes inside `notes/`. The AI assistant reads those fil
 
 ## Requirements
 
-Before installing, make sure you have:
-
-- **Python 3.8 or later** — [python.org/downloads](https://www.python.org/downloads/)
 - **Git** — [git-scm.com/downloads](https://git-scm.com/downloads)
 - **Gemini CLI** (free) or **Claude Code** (paid) — the installer can set these up for you if you have npm
 
-The installer handles everything else (vault setup, config, desktop shortcut).
+Python is installed automatically by the bootstrap script — no manual setup needed.
 
 ---
 
 ## Install on Mac
 
-Open Terminal and run:
+**Option 1 — double-click (easiest):**
+
+1. Clone or download the repo
+2. Double-click `Start.command`
+
+> **macOS security warning:** the first time you open `Start.command`, macOS may block it. Right-click the file → "Open" → "Open" to allow it. This only happens once.
+
+**Option 2 — one-liner from Terminal:**
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/FranciscoAnnoni/second-brain-pack/main/bootstrap/mac.sh)"
 ```
 
-Or clone the repo first if you prefer:
+The bootstrap installs `uv` (Python manager) if needed, then opens the installer window.
 
-```bash
-git clone https://github.com/FranciscoAnnoni/second-brain-pack
-cd second-brain-pack
-bash bootstrap/mac.sh
-```
+**In the installer:**
+1. Choose your AI agent and whether to install it automatically
+2. Enter your assistant's name and your name
+3. Choose where to create the vault (default: `~/SecondBrain`) and click Install
 
-The bootstrap script checks for Python, installs `customtkinter`, and opens the installer window.
-
-**Step by step in the installer:**
-1. Choose your AI agent (Gemini or Claude)
-2. Choose whether to install it automatically (requires npm) or skip if already installed
-3. Choose language and how much context to give the agent
-4. Enter your name and the name of your assistant
-5. Choose where to create the vault (default: `~/SecondBrain`)
-6. Click Install
-
-When done, a file called `Aria.app` (or whatever name you chose) appears on your Desktop. Double-click it to open a Terminal and run your brief.
+When done, `Aria.app` (or your chosen name) appears on your Desktop as a shortcut. Double-click it to run your brief.
 
 **First run:**
 ```bash
@@ -91,32 +84,29 @@ brief
 
 ## Install on Windows
 
-Open PowerShell and run:
+**Option 1 — double-click (easiest):**
+
+1. Clone or download the repo
+2. Double-click `Start.bat`
+
+**Option 2 — one-liner from PowerShell:**
 
 ```powershell
 iwr -useb https://raw.githubusercontent.com/FranciscoAnnoni/second-brain-pack/main/bootstrap/windows.ps1 | iex
 ```
 
-Or clone the repo first:
+The bootstrap installs `uv` (Python manager) if needed, then opens the installer window.
 
-```powershell
-git clone https://github.com/FranciscoAnnoni/second-brain-pack
-cd second-brain-pack
-powershell -ExecutionPolicy Bypass -File bootstrap\windows.ps1
-```
+**In the installer:** same 3 steps as Mac above.
 
-The bootstrap script checks for Python, installs `customtkinter`, and opens the installer window.
-
-**Step by step in the installer:** same as Mac above.
-
-When done, a file called `Aria.bat` (or your chosen name) appears on your Desktop. Double-click it to open a terminal and run your brief.
+When done, `Aria.bat` (or your chosen name) appears on your Desktop. Double-click it to run your brief.
 
 **First run:**
 ```
 brief
 ```
 
-> **Note:** Windows may show a SmartScreen warning on the `.bat` file the first time. Click "More info" → "Run anyway". This happens because the file is new and unsigned — it is a plain text file, not an executable.
+> **Note:** Windows may show a SmartScreen warning on `Start.bat` or the desktop shortcut the first time. Click "More info" → "Run anyway". They are plain text files, not executables.
 
 ---
 
